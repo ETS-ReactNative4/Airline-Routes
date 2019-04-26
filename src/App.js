@@ -2,16 +2,29 @@ import React, { Component } from 'react';
 import './App.css';
 import DATA from './data';
 
+import Table from './components/Table';
+
 class App extends Component {
   constructor(props) {
     super(props);
   }
 
+  formatValue(property, value) {
+    let str = '';
+    if (property === 'src'|| property === 'dest') {
+      str = DATA.airportByCode(value);
+    } else if (property === 'airline') {
+      str = DATA.airportByCode(value)
+    }
+
+    return str;
+  }
+
   render() {
     const columns = [
-      {name: 'Airline'},
-      {name: 'Source Airport'},
-      {name: 'Destination Airport'},
+      {name: 'Airline', property: 'airline'},
+      {name: 'Source Airport', property: 'src'},
+      {name: 'Destination Airport', property: 'dest'},
     ];
 
     const rows = DATA.routes.map((route) => {
@@ -28,13 +41,7 @@ class App extends Component {
           <h1 className="title">Airline Routes</h1>
         </header>
         <section>
-          <Table
-            className='routes-table'
-            columns={columns}
-            rows={rows}
-          >
-
-          </Table>
+          <Table className="routes-table" columns={columns} rows={rows} format={this.formatValue} />
         </section>
       </div>
     );
@@ -43,33 +50,3 @@ class App extends Component {
 
 export default App;
 
-class Table extends Component {
-  render() {
-    return (
-      <table className={this.props.className}>
-        <thead>
-          <tr>
-            {
-              this.props.columns.map((column, i) => {
-                return (<th key={i}>{column.name}</th>);
-              })
-            }
-          </tr>
-        </thead>
-        <tbody>
-          {
-            this.props.rows.map((row, i) => {
-              return (
-                <tr key={i}>
-                  <td>{row.name}</td>
-                  <td>{row.src}</td>
-                  <td>{row.dest}</td>
-                </tr>
-              )
-            })
-          }        
-        </tbody>
-      </table>
-    )
-  }
-}
