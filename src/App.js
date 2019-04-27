@@ -91,6 +91,13 @@ class App extends Component {
     })
   }
 
+  clearFilters = (e) => {
+    this.setState({
+      airport: 'all',
+      airline: 'all',
+    })
+  }
+
   render() {
     const columns = [
       {name: 'Airline', property: 'airline'},
@@ -120,6 +127,12 @@ class App extends Component {
                   value={this.state.airport}
                   onSelect={this.airportSelected}
           />
+          <button
+            onClick={this.clearFilters}
+          >
+          Clear Filters
+          </button>
+
           <Table className="routes-table" columns={columns} rows={this.filteredRows()} format={this.formatValue} />
         </section>
       </div>
