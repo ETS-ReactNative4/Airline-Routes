@@ -8,8 +8,17 @@ class Table extends Component {
 
   state = {
     page: 0,
-    airline: 'all',
   };
+
+  static getDerivedStateFromProps(nextProps, prevState){
+   return { page: 0};
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.rows !== this.props.rows) {
+      this.setState({page: 0});
+    } 
+  }
 
   nextPage = (e) => {
     e.preventDefault();
@@ -25,22 +34,14 @@ class Table extends Component {
     });
   }
 
-  onSelectAirline = (e) => {
-    this.setState({
-      airline: e.target.value,
-      page: 0,
-    })
-  }
-
   render() {
     const start = this.state.page * this.props.perPage;
 
     const headerCells = this.props.columns.map((column) => {
       return <th key={column.name}>{column.name}</th>
     });
-    const allRows = this.props.rows.slice();
-    const filteredRows = this.state.airline === 'all' ? allRows : allRows.filter((row) => row.airline === +this.state.airline)
-    const bodyRows = filteredRows.slice(start, start + this.props.perPage).map((row, i) => {
+    
+    const bodyRows = this.props.rows.slice(start, start + this.props.perPage).map((row, i) => {
       return (
         <tr key={Object.values(row).join(':')}>
           {Object.keys(row).map((property) => 
@@ -51,28 +52,9 @@ class Table extends Component {
         </tr>
       )
     });
-//debugger;
+
     return (
       <div>
-        <select 
-          name='airline'
-          onChange={this.onSelectAirline}
-          value={this.state.airline}
-        >
-          <option value="all">All Airlines</option>
-          {
-            DATA.airlines.map((airline) => {
-              return (
-                <option
-                  key={airline.id}
-                  value={airline.id}
-                >
-                  {DATA.airlineById(airline.id)}
-                </option>
-              )
-            })
-          }
-        </select>
         <table className={this.props.className}>
           <thead>
             <tr>
@@ -84,7 +66,11 @@ class Table extends Component {
           </tbody>
         </table>
 
-        <p>Showing {start + 1}-{start + this.props.perPage} of {filteredRows.length} routes.</p>
+        <p>Showing {start + 1}-{start + (
+            bodyRows.length < this.props.perPage ? bodyRows.length : 
+            this.props.perPage)} of {
+            this.props.rows.length} routes.
+        </p>
   
         <button
           disabled={this.state.page === 0}
@@ -95,7 +81,7 @@ class Table extends Component {
         </button>
 
         <button 
-          disabled={start + this.props.perPage >= filteredRows.length}
+          disabled={start + this.props.perPage >= this.props.rows.length}
           className='pagination' 
           onClick={this.nextPage}
         >
