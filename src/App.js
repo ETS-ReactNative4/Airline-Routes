@@ -7,6 +7,8 @@ import Table from './components/Table';
 class App extends Component {
   constructor(props) {
     super(props);
+
+    
   }
 
   formatValue(property, value) {
@@ -14,7 +16,7 @@ class App extends Component {
     if (property === 'src'|| property === 'dest') {
       str = DATA.airportByCode(value);
     } else if (property === 'airline') {
-      str = DATA.airportByCode(value)
+      str = DATA.airlineById(value);
     }
 
     return str;
@@ -27,13 +29,7 @@ class App extends Component {
       {name: 'Destination Airport', property: 'dest'},
     ];
 
-    const rows = DATA.routes.map((route) => {
-      return {
-        name: DATA.airlineById(route.airline),
-        src: DATA.airportByCode(route.src),
-        dest: DATA.airportByCode(route.dest),
-      };
-    });
+    const rows = DATA.routes;
 
     return (
       <div className="app">
