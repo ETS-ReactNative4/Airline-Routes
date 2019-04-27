@@ -18,7 +18,6 @@ import React, { Component } from 'react';
 function Select(props) {
   return (
     <select 
-      name='airline'
       onChange={props.onSelect}
       value={props.value}
     >

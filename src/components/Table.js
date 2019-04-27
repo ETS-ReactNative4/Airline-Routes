@@ -66,7 +66,11 @@ class Table extends Component {
           </tbody>
         </table>
 
-        <p>Showing {start + 1}-{start + this.props.perPage} of {this.props.rows.length} routes.</p>
+        <p>Showing {start + 1}-{start + (
+            bodyRows.length < this.props.perPage ? bodyRows.length : 
+            this.props.perPage)} of {
+            this.props.rows.length} routes.
+        </p>
   
         <button
           disabled={this.state.page === 0}
